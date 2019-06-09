@@ -85,5 +85,5 @@ while key != 27:                                                   # While Esc k
     win.addstr(snake[0][0], snake[0][1], '#')
     
 curses.endwin()
-print('\x1b[6;30;42m' +  "\nScore - " + str(score) + '\x1b[0m')
-print("http://bitemelater.in\n")
+#print('\x1b[6;30;42m' +  "\nScore - " + str(score) + '\x1b[0m')
+#print("http://bitemelater.in\n")
