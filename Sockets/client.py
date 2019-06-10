@@ -27,23 +27,15 @@ dest = (HOST, PORT)
 tcp.connect(dest)
 
 
-#print 'Para sair use CTRL+X\n'
-#msg = raw_input()
-# while msg <> '\x18':
-#     tcp.send (msg)
-#     msg = raw_input()
-#     x = tcp.recv(1024)
-#     print x
-
 curses.initscr()
 win = curses.newwin(30, 70, 0, 0)
 win.keypad(1)
 curses.noecho()
 curses.curs_set(0)
 #win.border(0)
-#win.nodelay(1)
+win.nodelay(1)
 
-out_str = ' '
+out_str = '-'
 
 def print_map():
 	global tcp
@@ -51,11 +43,10 @@ def print_map():
 	global out_str
 
 	while True:
-
 		out_str = tcp.recv(4096)
-    	#win.addstr(0, 0, out_str)
-    	#x = out_str
-    	#win.addstr(0, 0, x)
+		#win.addstr(0, 0, out_str)
+
+
 
 def send_input():
 	global win
@@ -80,14 +71,15 @@ res = win.getch()
 if (res == ord('A') or res == ord('a')):
 	IA = True
 
-thread.start_new_thread(print_map, tuple([]) )
+win.addstr(0, 0, out_str)
+
+#thread.start_new_thread(print_map, tuple([]) )
 thread.start_new_thread(send_input, tuple([]) )
 
 #print_map()
 while True:
-	
-	#win.addstr(0, 0, out_str)
-	pass
-    #a = 1
+	out_str = tcp.recv(4096)
+	win.addstr(0, 0, out_str)
+	#pass
 
 tcp.close()

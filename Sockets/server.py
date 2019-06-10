@@ -175,6 +175,7 @@ def get_input(con, cliente):
     # else:
     #     pass
 
+    this_p = c_player
     c_player += 1
 
     key = KEY_RIGHT
@@ -195,7 +196,7 @@ def get_input(con, cliente):
         if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, 27, 0]:     # If an invalid key is pressed
             key = prevKey
 
-        commands[c_player-1] = key
+        commands[this_p] = key
 
 
     con.close()
