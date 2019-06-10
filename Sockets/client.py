@@ -86,8 +86,8 @@ thread.start_new_thread(send_input, tuple([]) )
 #print_map()
 while True:
 	
-	win.addstr(0, 0, out_str)
-
+	#win.addstr(0, 0, out_str)
+	pass
     #a = 1
 
 tcp.close()

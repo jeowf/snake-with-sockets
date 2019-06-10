@@ -14,27 +14,26 @@ from random import randint
 commands = [KEY_RIGHT, KEY_RIGHT]
 outstr = ''
 
-snake1 = []
-snake2 = []
+c_player = 0
+
+snake1 = [[randint(1, 9), randint(1, 29)]]
+snake2 = [[randint(10, 18), randint(30, 58)]]
 
 def process(clients):
     global commands
     global outstr
+    global food
+    global snake1
+    global snake2
+    global c_player
 
     w, h = 60, 20;
     board = [[0 for x in range(w)] for y in range(h)];
-    # curses.initscr()
-    # win = curses.newwin(20, 60, 0, 0)
-    # win.keypad(1)
-    # curses.noecho()
-    # curses.curs_set(0)
-    # win.border(0)
-    # win.nodelay(1)
 
     score = 0
 
-    snake = [[4,10], [4,9], [4,8]]                                     # Initial snake co-ordinates
-    snake = [[4,10], [4,9], [4,8]]                                     
+    #snake = [[4,10], [4,9], [4,8]]                                     # Initial snake co-ordinates
+    #snake = [[4,10], [4,9], [4,8]]                                     
     
     food = [10,20]                                                     # First food co-ordinates
 
@@ -42,46 +41,99 @@ def process(clients):
 
     key = KEY_RIGHT
 
+    # while c_player == 0:
+    #     pass
+
+    for y in range(0, h):
+        for x in range(0, w):
+            board[y][x] = ' '
+
+    board[food[0]][food[1]] = '*'
+
+    outstr = ''
+    for x in range(0, w):
+        outstr += '/'
+    for y in range(0, h):
+        for x in range(0, w):
+            outstr += board[y][x]
+        outstr += '\n'
+    for x in range(0, w):
+        outstr += '/'
+
+    print outstr
+
     while key != 27:                                                   # While Esc key is not pressed
 
-        key = commands[0]
+        if (c_player == 0):
+            continue
 
+        key = commands[0]
+        #snake = snake1
         # Calculates the new coordinates of the head of the snake. NOTE: len(snake) increases.
         # This is taken care of later at [1].
-        snake.insert(0, [snake[0][0] + (key == KEY_DOWN and 1) + (key == KEY_UP and -1), snake[0][1] + (key == KEY_LEFT and -1) + (key == KEY_RIGHT and 1)])
+        snake1.insert(0, [snake1[0][0] + (key == KEY_DOWN and 1) + (key == KEY_UP and -1), snake1[0][1] + (key == KEY_LEFT and -1) + (key == KEY_RIGHT and 1)])
 
-        # If snake crosses the boundaries, make it enter from the other side
-        #if snake[0][0] == 0: snake[0][0] = 18
-        if snake[0][1] == 0: snake[0][1] = 58
-        #if snake[0][0] == 19: snake[0][0] = 1
-        if snake[0][1] == 59: snake[0][1] = 1
+        # If snake1 crosses the boundaries, make it enter from the other side
+        #if snake1[0][0] == 0: snake1[0][0] = 18
+        if snake1[0][1] == 0: snake1[0][1] = 58
+        #if snake1[0][0] == 19: snake1[0][0] = 1
+        if snake1[0][1] == 59: snake1[0][1] = 1
 
-        # Exit if snake crosses the boundaries (Uncomment to enable)
-        if snake[0][0] == 0 or snake[0][0] == 19: break
-        #if snake[0][0] == 0 or snake[0][0] == 19 or snake[0][1] == 0 or snake[0][1] == 59: break
+        # Exit if snake1 crosses the boundaries (Uncomment to enable)
+        if snake1[0][0] == 0 or snake1[0][0] == 19: break
+        #if snake1[0][0] == 0 or snake1[0][0] == 19 or snake1[0][1] == 0 or snake1[0][1] == 59: break
         #print 'opa'
 
-        # If snake runs over itself
-        if snake[0] in snake[1:]: break
+        # If snake1 runs over itself
+        if snake1[0] in snake1[1:]: break
         
-        if snake[0] == food:                                            # When snake eats the food
+        if snake1[0] == food:                                            # When snake1 eats the food
             food = []
             score += 1
             while food == []:
                 food = [randint(1, 18), randint(1, 58)]                 # Calculating next food's coordinates
-                if food in snake: food = []
+                if food in snake1: food = []
             #win.addch(food[0], food[1], '*')
         else:    
-            last = snake.pop()                                          # [1] If it does not eat the food, length decreases
+            last = snake1.pop()                                          # [1] If it does not eat the food, length decreases
             #win.addch(last[0], last[1], ' ')
         #win.addch(snake[0][0], snake[0][1], '#')
+
+        if c_player > 1:
+            key2 = commands[1]
+
+            #snake2.insert(0, [snake2[0][0] + (key2 == KEY_DOWN and 1) + (key2 == KEY_UP and -1), snake2[0][1] + (key2 == KEY_LEFT and -1) + (key2 == KEY_RIGHT and 1)])
+
+            #snake2 = snake22
+
+            snake2.insert(0, [snake2[0][0] + (key2 == KEY_DOWN and 1) + (key2 == KEY_UP and -1), snake2[0][1] + (key2 == KEY_LEFT and -1) + (key2 == KEY_RIGHT and 1)])
+
+            if snake2[0][1] == 0: snake2[0][1] = 58
+            if snake2[0][1] == 59: snake2[0][1] = 1
+            if snake2[0][0] == 0 or snake2[0][0] == 19: break
+            if snake2[0] in snake2[1:]: break
+            if snake2[0] == food:                                            # When snake2 eats the food
+                food = []
+                score += 1
+                while food == []:
+                    food = [randint(1, 18), randint(1, 58)]                 # Calculating next food's coordinates
+                    if food in snake2: food = []
+            else:    
+                last = snake2.pop()
+
+            if snake2[0] in snake1[1:]: break
+            if snake1[0] in snake2[1:]: break
 
         for y in range(0, h):
             for x in range(0, w):
                 board[y][x] = ' '
 
-        for s in snake:
+        for s in snake1:
             board[s[0]][s[1]] = '#'
+
+        if (c_player > 1):
+            for s in snake2:
+                board[s[0]][s[1]] = '@'
 
         board[food[0]][food[1]] = '*'
 
@@ -107,6 +159,23 @@ def process(clients):
 
 def get_input(con, cliente):
     global commands
+    global c_player
+    # global snake1
+    # global snake2
+    # global food
+
+    
+
+    # if (c_player == 0):
+    #     while snake1 == []:
+    #         snake1 = [[randint(1, 18), randint(1, 58)]]
+    #         if food in snake1: snake1 = []
+        
+
+    # else:
+    #     pass
+
+    c_player += 1
 
     key = KEY_RIGHT
 
@@ -126,7 +195,7 @@ def get_input(con, cliente):
         if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, 27, 0]:     # If an invalid key is pressed
             key = prevKey
 
-        commands[0] = key
+        commands[c_player-1] = key
 
 
     con.close()
